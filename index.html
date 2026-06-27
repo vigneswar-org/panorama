@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kanchenjunga - Ascend the Peak</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'sky-dark': '#2e2c56',
+            'sky-mid': '#5a4f7c',
+            'sky-light': '#c87c88',
+            'mountain-shadow': '#46426b',
+            'mountain-lit-1': '#f26f63',
+            'mountain-lit-2': '#ffa384',
+            'forest-dark': '#060b11',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-styles">
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #2e2c56 0%, #5a4f7c 40%, #c87c88 100%);
+    }
+    
+    .glow-text {
+      text-shadow: 0 4px 12px rgba(255, 163, 132, 0.4);
+    }
+
+    .cloud-container {
+      filter: blur(1px); 
+    }
+    
+    .climber-silhouette {
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    @keyframes walk {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-2px) rotate(5deg); }
+      50% { transform: translateY(0) rotate(0deg); }
+      75% { transform: translateY(-2px) rotate(-5deg); }
+    }
+    .animate-walk {
+      animation: walk 1s infinite linear;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+    .tree-sway {
+      transform-origin: bottom center;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    /* CV Modal Styles */
+    .cv-overlay {
+      clip-path: url(#cv-mask);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(20px) scale(0.98);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cv-overlay.active {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body class="w-full h-screen relative font-sans text-white antialiased">
+<!-- SVG Mask for Wavy Viewer -->
+<svg height="0" width="0">
+<defs>
+<clippath clippathunits="objectBoundingBox" id="cv-mask"><path d="M0,0.1 L0.02,0.08 L0.04,0.12 L0.06,0.05 L0.08,0.11 L0.1,0.03 L0.12,0.1 L0.14,0.06 L0.16,0.14 L0.18,0.04 L0.2,0.12 L0.22,0.08 L0.24,0.15 L0.26,0.07 L0.28,0.13 L0.3,0.05 L0.32,0.12 L0.34,0.08 L0.36,0.16 L0.38,0.06 L0.4,0.14 L0.42,0.1 L0.44,0.17 L0.46,0.09 L0.48,0.15 L0.5,0.07 L0.52,0.14 L0.54,0.1 L0.56,0.18 L0.58,0.08 L0.6,0.16 L0.62,0.12 L0.64,0.19 L0.66,0.11 L0.68,0.17 L0.7,0.09 L0.72,0.16 L0.74,0.12 L0.76,0.2 L0.78,0.1 L0.8,0.18 L0.82,0.14 L0.84,0.21 L0.86,0.13 L0.88,0.19 L0.9,0.11 L0.92,0.18 L0.94,0.14 L0.96,0.22 L0.98,0.12 L1,0.2 V0.8 L0.98,0.88 L0.96,0.78 L0.94,0.86 L0.92,0.82 L0.9,0.89 L0.88,0.81 L0.86,0.87 L0.84,0.79 L0.82,0.86 L0.8,0.82 L0.78,0.9 L0.76,0.8 L0.74,0.88 L0.72,0.84 L0.7,0.91 L0.68,0.83 L0.66,0.89 L0.64,0.81 L0.62,0.88 L0.6,0.84 L0.58,0.92 L0.56,0.82 L0.54,0.9 L0.52,0.86 L0.5,0.93 L0.48,0.85 L0.46,0.91 L0.44,0.83 L0.42,0.9 L0.4,0.86 L0.38,0.94 L0.36,0.84 L0.34,0.92 L0.32,0.88 L0.3,0.95 L0.28,0.87 L0.26,0.93 L0.24,0.85 L0.22,0.92 L0.2,0.88 L0.18,0.96 L0.16,0.86 L0.14,0.94 L0.12,0.9 L0.1,0.97 L0.08,0.89 L0.06,0.95 L0.04,0.87 L0.02,0.94 L0,0.9 Z"></path></clippath>
+</defs>
+</svg>
+<!-- BEGIN: Environment Background -->
+<div class="absolute inset-0 z-0 pointer-events-none" data-purpose="scene-container">
+<!-- Star Constellation Canvas -->
+<canvas class="absolute inset-0 w-full h-full z-[5]" id="starCanvas"></canvas>
+<!-- Mountain Geometry -->
+<svg class="absolute bottom-0 w-full h-[90%] object-cover object-bottom" data-purpose="mountain-svg" id="mountainSvg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1600 800">
+<!-- Deep Background Shadows -->
+<polygon fill="#38345c" points="0,800 0,550 200,480 400,320 600,400 800,200 1100,450 1400,550 1600,650 1600,800"></polygon>
+<!-- Main Peak Shadow Side (Left) -->
+<polygon fill="#46426b" points="100,800 350,520 550,350 800,180 1000,450 950,800"></polygon>
+<polygon fill="#585282" points="250,800 500,580 650,450 820,250 950,450"></polygon>
+<!-- Main Peak Lit Side (Right) & Alpenglow -->
+<polygon fill="#b85f6c" points="800,180 1000,250 1250,450 1600,800 950,800 1000,450"></polygon>
+<polygon fill="#f26f63" points="800,180 950,220 1150,350 1250,320 1350,450 1100,500 1000,450"></polygon>
+<!-- Brightest Highlights (Snow Capped) -->
+<polygon fill="#fff" points="800,180 850,210 900,215 1000,270 1050,290 1200,380 1120,390 950,310 900,250"></polygon>
+<polygon fill="#ffece6" points="800,180 840,185 880,195 835,205"></polygon>
+<!-- Secondary Sloped Face (Right) -->
+<polygon fill="#e5766e" points="1250,320 1400,400 1550,450 1600,550 1600,800 1350,550"></polygon>
+<polygon fill="#ffa384" points="1400,400 1500,420 1600,500 1600,550 1550,530 1450,480"></polygon>
+<polygon fill="#fff" points="1400,400 1430,425 1470,435 1450,460 1425,445"></polygon>
+<!-- Lower Left Ranges -->
+<polygon fill="#5a548c" points="0,800 0,650 150,600 350,700 500,650 650,750"></polygon>
+<polygon fill="#8c6c94" points="0,650 100,630 200,680 300,640 150,600"></polygon>
+</svg>
+<!-- Misty Particle Simulation Canvas -->
+<div class="absolute inset-0 z-10 opacity-80 mix-blend-screen cloud-container" data-purpose="mist-container">
+<canvas class="absolute inset-0 w-full h-full" data-purpose="particle-mist" id="mistCanvas"></canvas>
+</div>
+<!-- Foreground Alpine Forest -->
+<svg class="absolute bottom-0 w-full h-[30%] z-10" data-purpose="forest-silhouette" preserveaspectratio="xMidYMax slice" viewbox="0 0 1000 250">
+<defs>
+<path d="M0,0 L-3,12 L-1,12 L-5,28 L-2,28 L-7,45 L-3,45 L-9,65 L-4,65 L-12,90 L12,90 L4,65 L9,65 L3,45 L7,45 L2,28 L5,28 L1,12 L3,12 Z" id="pine-tall"></path>
+<path d="M0,0 L-5,15 L-2,15 L-8,35 L-3,35 L-11,55 L-5,55 L-14,80 L14,80 L5,55 L11,55 L3,35 L8,35 L2,15 L5,15 Z" id="pine-bushy"></path>
+<path d="M0,0 L-4,10 L-1,10 L-6,25 L-2,25 L-9,45 L9,45 L2,25 L6,25 L1,10 L4,10 Z" id="pine-small"></path>
+</defs>
+<path d="M0,250 L1000,250 L1000,200 Q750,220 500,180 T0,190 Z" fill="#060b11" id="forestPath"></path>
+<g class="tree-sway">
+<g fill="#060b11">
+<use href="#pine-tall" transform="translate(15, 185) scale(0.8)"></use>
+<use href="#pine-bushy" transform="translate(40, 180) scale(0.7)"></use>
+<use href="#pine-small" transform="translate(65, 190) scale(1.1)"></use>
+<use href="#pine-tall" transform="translate(250, 155) scale(0.95)"></use>
+<use href="#pine-bushy" transform="translate(300, 160) scale(0.85)"></use>
+<use href="#pine-tall" transform="translate(350, 150) scale(0.9)"></use>
+<use href="#pine-small" transform="translate(400, 165) scale(0.7)"></use>
+<use href="#pine-tall" transform="translate(595, 150) scale(0.8)"></use>
+<use href="#pine-small" transform="translate(640, 160) scale(0.9)"></use>
+<use href="#pine-tall" transform="translate(710, 152) scale(1.0)"></use>
+<use href="#pine-bushy" transform="translate(780, 158) scale(0.8)"></use>
+<use href="#pine-tall" transform="translate(930, 170) scale(1.05)"></use>
+<use href="#pine-tall" transform="translate(980, 165) scale(0.9)"></use>
+</g>
+<g fill="#030609">
+<use href="#pine-tall" transform="translate(30, 195) scale(1.2)"></use>
+<use href="#pine-tall" transform="translate(85, 185) scale(1.1)"></use>
+<use href="#pine-tall" transform="translate(260, 180) scale(1.2)"></use>
+<use href="#pine-tall" transform="translate(340, 170) scale(1.4)"></use>
+<use href="#pine-tall" transform="translate(410, 178) scale(1.25)"></use>
+<use href="#pine-tall" transform="translate(570, 172) scale(1.15)"></use>
+<use href="#pine-bushy" transform="translate(650, 165) scale(1.3)"></use>
+<use href="#pine-tall" transform="translate(730, 175) scale(1.2)"></use>
+<use href="#pine-tall" transform="translate(890, 180) scale(1.3)"></use>
+<use href="#pine-tall" transform="translate(960, 185) scale(1.4)"></use>
+</g>
+</g>
+</svg>
+<!-- Bird Canvas moved higher in Z-index to fly over everything including CV -->
+<canvas class="absolute inset-0 z-[100] pointer-events-none" id="birdsCanvas"></canvas>
+</div>
+<!-- END: Environment Background -->
+<!-- CV VIEWER LAYER -->
+<div class="absolute inset-0 z-40 flex items-center justify-center p-8 pointer-events-none" id="cvContainer">
+<div class="cv-overlay w-full max-w-5xl h-[75vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden" id="cvContent">
+<button class="absolute top-8 right-12 z-[60] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV()">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="flex-grow w-full h-full pointer-events-auto bg-black/20">
+<!-- PDF Iframe Viewer -->
+<!-- User: Swap the 'src' below with your actual PDF URL -->
+<iframe class="w-full h-full border-none" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" title="CV Viewer">
+&amp;lt;p&amp;gt;Your browser does not support iframes. &amp;lt;a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"&amp;gt;Download the PDF instead&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+</iframe>
+</div>
+</div>
+</div>
+<!-- BEGIN: UI Overlay -->
+<div class="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none" data-purpose="ui-layer">
+<header class="w-full px-8 py-6 flex justify-between items-center pointer-events-auto">
+<div class="text-xl font-bold tracking-widest uppercase font-serif">Peak</div>
+<nav class="flex space-x-4">
+<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" onclick="toggleCV()">CV</button>
+<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm">Blog</button>
+</nav>
+</header>
+<main class="flex-grow relative pointer-events-none w-full h-full">
+<div class="absolute bottom-0 left-0 w-full h-full pointer-events-none" id="landmarkRegion">
+<div class="group absolute left-[15%] -translate-x-1/2 flex flex-col items-center justify-end pointer-events-auto cursor-pointer w-[60px] h-[60px]" id="cabinNode">
+<div class="absolute inset-0 bg-white/10 blur-xl rounded-full pointer-events-none"></div>
+<img alt="Cabin" class="w-full h-full object-contain filter drop-shadow-md opacity-90 group-hover:opacity-100 transition-opacity relative z-10" src="https://lh3.googleusercontent.com/aida/ADBb0uhdjtopNrTP5LtpruW22kxQO4BcF7jq_f5HycBa9wODRX62P4wlwStq_kcBV10gDuQ3MYG8NRKmiVcshpV8UY_XJV_aysCCXed3zgBZhtyu-N4kFWLueKiIfulTWG0m6dOMAaiy4ukTEShtRZMY7HIyK3CQbsWmqyYzkyhQDD6Tw7FFlj3Anzw4zwZ5ecC-EleG8TFboQiVMNu0lEyPDt5cT2C161F8_rokdbXQL2e3i7SgxtYb32d5nrc"/>
+<button class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1 text-[10px] font-medium uppercase tracking-wider bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)] whitespace-nowrap z-30">Home</button>
+</div>
+<div class="group absolute left-[50%] -translate-x-1/2 flex flex-col items-center justify-end pointer-events-auto cursor-pointer w-[40px] h-[40px]" id="trekkerNode">
+<div class="absolute w-16 h-8 bg-gradient-to-r from-orange-400/50 to-transparent rounded-full blur-md opacity-90 animate-pulse pointer-events-none" style="left: 75%; top: 35%; transform-origin: left center; transform: rotate(15deg);"></div>
+<div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] opacity-100 animate-pulse pointer-events-none" style="left: 75%; top: 40%; box-shadow: 0 0 15px 5px rgba(251, 146, 60, 0.8);"></div>
+<svg class="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity animate-walk drop-shadow-md" fill="#f8fafc" viewbox="0 0 24 24">
+<path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9-0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"></path>
+</svg>
+<button class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1 text-[10px] font-medium uppercase tracking-wider bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)] whitespace-nowrap z-30">Contact</button>
+</div>
+<div class="group absolute left-[85%] -translate-x-1/2 flex flex-col items-center justify-end pointer-events-auto cursor-pointer w-[32px] h-[40px]" id="flagNode">
+<svg class="w-full h-full opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md" fill="none" stroke="#f8fafc" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M4 22V4c0-.5.4-1 1-1h15l-3 5 3 5H5"></path>
+</svg>
+<button class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1 text-[10px] font-medium uppercase tracking-wider bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)] whitespace-nowrap z-30">Projects</button>
+</div>
+</div>
+</main>
+<footer class="w-full px-8 py-6 flex justify-between items-center text-xs text-gray-400 font-light pointer-events-auto">
+<span></span>
+<span></span>
+</footer>
+</div>
+<!-- END: UI Overlay -->
+<script>
+  function toggleCV() {
+    const content = document.getElementById('cvContent');
+    content.classList.toggle('active');
+  }
+</script>
+<!-- BEGIN: Simulation Scripts -->
+<script data-purpose="mist-simulation">
+  (function() {
+    const canvas = document.getElementById('mistCanvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    
+    const birdsCanvas = document.getElementById('birdsCanvas');
+    const birdsCtx = birdsCanvas.getContext('2d', { alpha: true });
+
+    const starCanvas = document.getElementById('starCanvas');
+    const starCtx = starCanvas.getContext('2d');
+    
+    const landmarkRegion = document.getElementById('landmarkRegion');
+    const cabinNode = document.getElementById('cabinNode');
+    const trekkerNode = document.getElementById('trekkerNode');
+    const flagNode = document.getElementById('flagNode');
+    
+    let width, height;
+    let particles = [];
+    let birds = [];
+    let stars = [];
+    let globalTime = 0;
+    
+    const BIRD_AVG_SPEED = 2.0; 
+    const MAX_PARTICLE_SPEED = BIRD_AVG_SPEED / 2.0; 
+    const MAX_WIND_VAL = 1.0;
+    const MIN_WIND_VAL = 0.5;
+    
+    let frameCount = 0;
+    let windIntensity = MIN_WIND_VAL;
+    let targetWind = MIN_WIND_VAL;
+    let isGusting = false;
+    let gustDuration = 0;
+    let nextGustTime = Math.random() * 200 + 200;
+    
+    let svgScaleX, svgScaleY, svgOffsetX, svgOffsetY;
+
+    // Constellation parameters
+    let wordPoints = [];
+    let animationState = 'waiting'; 
+    let animationTimer = 0;
+    let currentWaitingLimit = 600; 
+    let persistentStarsIndices = [];
+    let willPersistent = false;
+
+    const STATE_TIMES = {
+      waiting: 600,     // Gap between cycles (10s+)
+      emerging: 300,    // Emergence and pre-twinkle (3-10s randomized)
+      converging: 300,  // Moving to name formation
+      holding: 240,     // Twinkle as name
+      dispersing: 300,  // Move out but stay lit
+      lingering: 300,   // Stay in sky after dispersion (4-10s randomized)
+      fading: 180       // Final fade out
+    };
+
+    function resize() {
+      width = canvas.width = birdsCanvas.width = starCanvas.width = window.innerWidth;
+      height = canvas.height = birdsCanvas.height = starCanvas.height = window.innerHeight;
+      
+      const SVG_WIDTH = 1600;
+      const SVG_HEIGHT = 800;
+      const mountainHeightRatio = 0.9;
+      const effectiveHeight = height * mountainHeightRatio;
+      
+      const scaleFitWidth = width / SVG_WIDTH;
+      const scaleFitHeight = effectiveHeight / SVG_HEIGHT;
+      const scale = Math.max(scaleFitWidth, scaleFitHeight);
+      
+      svgScaleX = svgScaleY = scale;
+      svgOffsetX = (width - (SVG_WIDTH * scale)) / 2;
+      svgOffsetY = height - (SVG_HEIGHT * scale);
+
+      groundElements();
+      generateWordPoints();
+      initStars();
+    }
+
+    function getMountainBoundary(screenX) {
+      const svgX = (screenX - svgOffsetX) / svgScaleX;
+      let peakY = 800;
+
+      const forestPixelY = height - getYOnForest((screenX / width));
+
+      if (svgX < 350) peakY = Math.min(peakY, 650 - (svgX/350)*50);
+      else if (svgX < 600) peakY = Math.min(peakY, 600);
+      
+      if (svgX >= 0 && svgX <= 800) {
+        const t = (svgX - 100) / 700;
+        const pY = Math.max(0, 550 - t*370);
+        peakY = Math.min(peakY, pY);
+      } 
+      
+      if (svgX > 800 && svgX <= 1600) {
+        const t = (svgX - 800) / 800;
+        const pY = 180 + t*620;
+        peakY = Math.min(peakY, pY);
+      }
+
+      if (svgX >= 1250) {
+        const t = (svgX - 1250) / 350;
+        const pY = 320 + t*330;
+        peakY = Math.min(peakY, pY);
+      }
+
+      const svgPixelY = svgOffsetY + (peakY * svgScaleY);
+      return Math.min(svgPixelY, forestPixelY);
+    }
+
+    function generateWordPoints() {
+      const offscreenCanvas = document.createElement('canvas');
+      const offscreenCtx = offscreenCanvas.getContext('2d');
+      offscreenCanvas.width = width;
+      offscreenCanvas.height = height;
+      
+      const fontSize = Math.min(width * 0.1, 80);
+      offscreenCtx.font = `bold ${fontSize}px "Playfair Display", serif`;
+      offscreenCtx.textAlign = 'center';
+      offscreenCtx.textBaseline = 'middle';
+      offscreenCtx.fillText('VIGNESWAR', width / 2, height * 0.25);
+      
+      const imageData = offscreenCtx.getImageData(0, 0, width, height).data;
+      wordPoints = [];
+      const step = Math.max(2, Math.floor(fontSize / 20)); 
+      
+      for (let y = 0; y < height; y += step) {
+        for (let x = 0; x < width; x += step) {
+          const alpha = imageData[(y * width + x) * 4 + 3];
+          if (alpha > 128) {
+            wordPoints.push({ x, y });
+          }
+        }
+      }
+    }
+
+    function getRandomSkyPos() {
+      let sx, sy, mY;
+      let attempts = 0;
+      do {
+        sx = Math.random() * width;
+        sy = Math.random() * height;
+        mY = getMountainBoundary(sx);
+        attempts++;
+      } while (sy > mY - 10 && attempts < 50); 
+      return { x: sx, y: sy };
+    }
+
+    function initStars() {
+      stars = [];
+      const starCount = Math.max(wordPoints.length, 600);
+      for (let i = 0; i < starCount; i++) {
+        const pos = getRandomSkyPos();
+        stars.push({
+          x: pos.x,
+          y: pos.y,
+          targetX: 0,
+          targetY: 0,
+          originX: pos.x,
+          originY: pos.y,
+          size: Math.random() * 1.5 + 0.5,
+          opacity: 0,
+          twinkleSpeed: 0.05 + Math.random() * 0.1,
+          isTwinkler: Math.random() > 0.2,
+          hasTarget: false,
+          isPersistent: false
+        });
+      }
+      
+      const indices = Array.from({length: stars.length}, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+
+      for (let i = 0; i < wordPoints.length && i < stars.length; i++) {
+        const s = stars[indices[i]];
+        s.targetX = wordPoints[i].x;
+        s.targetY = wordPoints[i].y;
+        s.hasTarget = true;
+      }
+    }
+
+    function updateStars() {
+      animationTimer++;
+      let limit = STATE_TIMES[animationState];
+      if (animationState === 'waiting') limit = currentWaitingLimit;
+
+      if (animationTimer >= limit) {
+        animationTimer = 0;
+        switch(animationState) {
+          case 'waiting': 
+            animationState = 'emerging'; 
+            STATE_TIMES.emerging = Math.floor((Math.random() * 7 + 3) * 60); 
+            willPersistent = Math.random() > 0.6;
+            resetStarOrigins(); 
+            break;
+          case 'emerging': 
+            animationState = 'converging'; 
+            break;
+          case 'converging': 
+            animationState = 'holding'; 
+            break;
+          case 'holding': 
+            animationState = 'dispersing'; 
+            break;
+          case 'dispersing': 
+            animationState = 'lingering'; 
+            STATE_TIMES.lingering = Math.floor((Math.random() * 6 + 4) * 60); 
+            break;
+          case 'lingering': 
+            animationState = 'fading'; 
+            break;
+          case 'fading': 
+            animationState = 'waiting'; 
+            currentWaitingLimit = 600 + Math.floor(Math.random() * 600); 
+            break;
+        }
+      }
+
+      const progress = animationTimer / limit;
+
+      stars.forEach((s, idx) => {
+        const mountainY = getMountainBoundary(s.x);
+        const isOccluded = s.y > mountainY - 2;
+
+        if (animationState === 'waiting') {
+          if (willPersistent && s.isPersistent && !isOccluded) {
+              s.opacity = 0.5 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3;
+          } else {
+              s.opacity = 0;
+          }
+          return;
+        }
+
+        let currentAlpha = 1.0;
+
+        if (animationState === 'emerging') {
+          s.x = s.originX;
+          s.y = s.originY;
+          currentAlpha = Math.min(progress * 1.5, 0.7 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3);
+        }
+        else if (animationState === 'converging') {
+          if (s.hasTarget) {
+            s.x += (s.targetX - s.x) * 0.05;
+            s.y += (s.targetY - s.y) * 0.05;
+          }
+          currentAlpha = (0.7 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3);
+        } 
+        else if (animationState === 'holding') {
+          if (s.hasTarget) {
+            s.x = s.targetX;
+            s.y = s.targetY;
+          }
+          currentAlpha = (0.8 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.2);
+        } 
+        else if (animationState === 'dispersing') {
+          if (s.hasTarget) {
+            s.x += (s.originX - s.x) * 0.03;
+            s.y += (s.originY - s.y) * 0.03;
+          }
+          currentAlpha = (0.7 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3);
+        }
+        else if (animationState === 'lingering') {
+          s.x = s.originX;
+          s.y = s.originY;
+          currentAlpha = (0.7 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3);
+        }
+        else if (animationState === 'fading') {
+          const fadeOutFactor = (1 - progress);
+          const targetOp = (0.7 + Math.sin(Date.now() * s.twinkleSpeed * 0.05) * 0.3);
+          if (willPersistent && s.isPersistent) {
+            currentAlpha = Math.max(0.4, targetOp * fadeOutFactor);
+          } else {
+            currentAlpha = Math.max(0, targetOp * fadeOutFactor);
+          }
+        }
+
+        s.opacity = isOccluded ? 0 : currentAlpha;
+      });
+    }
+
+    function resetStarOrigins() {
+      stars.forEach((s, idx) => {
+        const pos = getRandomSkyPos();
+        s.originX = pos.x;
+        s.originY = pos.y;
+        s.x = pos.x;
+        s.y = pos.y;
+        s.isPersistent = false;
+        if (pos.y < height * 0.15 && Math.random() < 0.1) {
+          s.isPersistent = true;
+        }
+      });
+    }
+
+    function drawStars() {
+      starCtx.clearRect(0, 0, width, height);
+      stars.forEach(s => {
+        if (s.opacity <= 0) return;
+        starCtx.globalAlpha = s.opacity;
+        starCtx.fillStyle = '#fff';
+        starCtx.beginPath();
+        starCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        starCtx.fill();
+      });
+      starCtx.globalAlpha = 1;
+    }
+
+    function getYOnForest(xPercent) {
+      let x = xPercent * 1000;
+      let yInViewbox;
+      if (x > 500) {
+        let t = (x - 500) / 500;
+        yInViewbox = (1-t)*(1-t)*180 + 2*(1-t)*t*220 + t*t*200;
+      } else {
+        let t = x / 500;
+        yInViewbox = 190 + (180 - 190) * Math.pow(t, 0.8); 
+      }
+      const forestHeight = height * 0.3;
+      const rootedYInViewbox = yInViewbox + 35; 
+      const yPixelsFromBottom = (250 - rootedYInViewbox) * (forestHeight / 250);
+      return yPixelsFromBottom;
+    }
+
+    function groundElements() {
+      if (!cabinNode || !trekkerNode || !flagNode) return;
+      cabinNode.style.bottom = getYOnForest(0.15) + 'px';
+      trekkerNode.style.bottom = getYOnForest(0.50) + 'px';
+      flagNode.style.bottom = getYOnForest(0.85) + 'px';
+    }
+    
+    window.addEventListener('resize', resize);
+    resize();
+
+    class MistParticle {
+      constructor() {
+        this.active = false;
+      }
+      
+      reset(clusterOriginX, clusterOriginY, isClusterMember = false) {
+        this.active = true;
+        const spawnXRange = [1000, 1100];
+        const randomX = spawnXRange[0] + Math.random() * (spawnXRange[1] - spawnXRange[0]);
+        const randomY = 180 + (randomX - 800) * 0.5;
+        const baseViewX = isClusterMember ? clusterOriginX : randomX;
+        const baseViewY = isClusterMember ? clusterOriginY : randomY;
+        const windScaleFactor = (windIntensity / MAX_WIND_VAL);
+        const spreadX = isGusting ? (Math.random() - 0.5) * (45 * windScaleFactor) : (Math.random() - 0.5) * 15;
+        const spreadY = isGusting ? (Math.random() - 0.5) * (25 * windScaleFactor) : (Math.random() - 0.5) * 10;
+        this.x = svgOffsetX + (baseViewX * svgScaleX) + spreadX;
+        this.y = svgOffsetY + (baseViewY * svgScaleY) + spreadY;
+        this.size = (Math.random() * 2.5 + 0.5) * (1 + (windScaleFactor - 0.5)); 
+        this.baseSpeed = Math.random() * MAX_PARTICLE_SPEED; 
+        this.life = 0;
+        this.maxLife = Math.random() * 1.8 + 1.2;
+        this.transitionPoint = 0.15 + Math.random() * 0.1; 
+        this.angle = Math.random() * Math.PI * 2;
+        this.angleSpeed = (Math.random() - 0.5) * 0.1;
+        this.customFallAngle = (9 + Math.random() * 9) * (Math.PI / 180);
+        const colors = ['rgba(255, 235, 230, ', 'rgba(255, 255, 255, ', 'rgba(240, 240, 255, '];
+        this.baseColor = colors[Math.floor(Math.random() * colors.length)];
+      }
+      
+      update() {
+        if (!this.active) return;
+        const lifeFactor = this.life / this.maxLife;
+        let vx, vy;
+        if (lifeFactor < this.transitionPoint) {
+          const liftAngle = -(9 + Math.random() * 2) * (Math.PI / 180);
+          vx = Math.cos(liftAngle) * this.baseSpeed * windIntensity;
+          vy = Math.sin(liftAngle) * this.baseSpeed * windIntensity;
+        } else {
+          const fallAngle = this.customFallAngle;
+          vx = Math.abs(Math.cos(fallAngle)) * (this.baseSpeed * 0.9) * windIntensity;
+          vy = Math.abs(Math.sin(fallAngle)) * (this.baseSpeed * 0.9) * windIntensity;
+          vx += Math.abs(Math.cos(this.angle)) * 0.15;
+          vy += Math.sin(this.angle) * 0.15;
+        }
+        this.angle += this.angleSpeed;
+        this.x += vx;
+        this.y += vy;
+        this.life += 0.008;
+        if (this.life >= this.maxLife || this.x > width + 50 || this.y > height + 50) {
+          this.active = false;
+        }
+      }
+      
+      draw() {
+        if (!this.active) return;
+        let opacity = 0.45;
+        if (this.life < 0.15) opacity = (this.life / 0.15) * 0.45;
+        else if (this.life > this.maxLife - 0.6) opacity = ((this.maxLife - this.life) / 0.6) * 0.45;
+        if (opacity < 0) opacity = 0;
+        ctx.fillStyle = this.baseColor + opacity + ')';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    class OrigamiBird {
+      constructor(x, y, vx, vy, scale) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.scale = scale;
+        this.flapAngle = Math.random() * Math.PI * 2;
+        this.flapSpeed = 0.08 + Math.random() * 0.08;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.flapAngle += this.flapSpeed;
+      }
+      draw() {
+        birdsCtx.save();
+        birdsCtx.translate(this.x, this.y);
+        birdsCtx.scale(this.scale, this.scale);
+        birdsCtx.rotate(Math.atan2(this.vy, this.vx) * 0.5);
+        const flap = Math.sin(this.flapAngle);
+        birdsCtx.fillStyle = 'rgba(255, 230, 220, 0.7)';
+        birdsCtx.beginPath();
+        birdsCtx.moveTo(0, 0); 
+        birdsCtx.lineTo(-8, -6 + flap * 5); 
+        birdsCtx.lineTo(-3, 1); 
+        birdsCtx.fill();
+        birdsCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        birdsCtx.beginPath();
+        birdsCtx.moveTo(0, 0);
+        birdsCtx.lineTo(2, -4 + flap * 4); 
+        birdsCtx.lineTo(-3, 1);
+        birdsCtx.fill();
+        birdsCtx.restore();
+      }
+    }
+    
+    const MAX_PARTICLES = 2000;
+    for (let i = 0; i < MAX_PARTICLES; i++) {
+      particles.push(new MistParticle());
+    }
+
+    function manageFlocks() {
+      if (Math.random() < 0.003 && birds.length < 8) {
+        const flockSize = Math.floor(Math.random() * 3) + 2;
+        const startY = height * 0.1 + Math.random() * height * 0.3;
+        const baseVx = BIRD_AVG_SPEED + (Math.random() - 0.5) * 0.5;
+        const baseVy = (Math.random() - 0.5) * 0.2;
+        const baseScale = 0.4 + Math.random() * 0.4; 
+        for (let i = 0; i < flockSize; i++) {
+          birds.push(new OrigamiBird(
+            -50 - Math.random() * 80,
+            startY + (Math.random() - 0.5) * 40,
+            baseVx + (Math.random() - 0.5) * 0.1,
+            baseVy + (Math.random() - 0.5) * 0.05,
+            baseScale * (0.8 + Math.random() * 0.4)
+          ));
+        }
+      }
+      birds = birds.filter(b => b.x < width + 100);
+    }
+    
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      birdsCtx.clearRect(0, 0, width, height);
+      
+      globalTime += 0.01;
+      frameCount++;
+
+      updateStars();
+      drawStars();
+      
+      if (frameCount >= nextGustTime) {
+          isGusting = true;
+          gustDuration = Math.random() * 300 + 150;
+          targetWind = MIN_WIND_VAL + Math.random() * (MAX_WIND_VAL - MIN_WIND_VAL) + 0.3;
+          nextGustTime = frameCount + gustDuration + Math.random() * 600 + 400;
+      }
+      
+      if (isGusting) {
+          gustDuration--;
+          if (gustDuration <= 0) {
+              isGusting = false;
+              targetWind = MIN_WIND_VAL;
+          }
+      } else {
+          targetWind = MIN_WIND_VAL + Math.sin(frameCount * 0.01) * 0.1;
+      }
+      
+      windIntensity += (targetWind - windIntensity) * 0.03;
+      
+      let spawnQuota = Math.floor(windIntensity * 18);
+      
+      if (isGusting && Math.random() < 0.4) {
+          const windVolumeMultiplier = (windIntensity / MAX_WIND_VAL) * 1.5;
+          const clusterSize = Math.floor((15 + Math.floor(Math.random() * 25)) * windVolumeMultiplier);
+          const cX = 1000 + Math.random() * 100;
+          const cY = 180 + (cX - 800) * 0.5;
+          let count = 0;
+          for(let i = 0; i < particles.length && count < clusterSize; i++) {
+              if (!particles[i].active) {
+                  particles[i].reset(cX, cY, true);
+                  count++;
+              }
+          }
+          spawnQuota -= count;
+      }
+
+      for(let i = 0; i < particles.length && spawnQuota > 0; i++) {
+          if (!particles[i].active) {
+              particles[i].reset();
+              spawnQuota--;
+          }
+      }
+
+      for(let i = 0; i < particles.length; i++) {
+        if (particles[i].active) {
+            particles[i].update();
+            particles[i].draw();
+        }
+      }
+
+      manageFlocks();
+      for(let i = 0; i < birds.length; i++) {
+        birds[i].update();
+        birds[i].draw();
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+  })();
+</script>
+<!-- END: Simulation Scripts -->
+</body></html>
