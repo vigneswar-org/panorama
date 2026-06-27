@@ -169,14 +169,14 @@
 <!-- CV VIEWER LAYER -->
 <div class="absolute inset-0 z-[120] flex items-center justify-center pointer-events-none px-8 pt-4 pb-12" id="cvContainer">
 <div class="cv-overlay w-full max-w-5xl h-[85vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden" id="cvContent">
-<button class="absolute top-4 right-8 z-[130] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV(event)">
+<button class="absolute top-2 right-4 z-[130] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV(event)">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
-<div class="flex-grow w-full h-full pointer-events-auto bg-black/20 pt-[38px] relative">
-<!-- Alpine Silhouettes Top/Bottom Decorations -->
-<div class="absolute top-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-b from-forest-dark/80 to-transparent"></div>
-<div class="absolute bottom-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-t from-forest-dark/80 to-transparent"></div>
-<iframe class="w-full h-full border-none" src="./vigneswar_icv.pdf" title="CV Viewer">
+<div class="flex-grow w-full h-full pointer-events-auto bg-black/20 relative">
+<!-- Removed top padding to align PDF directly under silhouette mask start -->
+<div class="absolute top-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-b from-forest-dark/80 to-transparent z-[125]"></div>
+<div class="absolute bottom-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-t from-forest-dark/80 to-transparent z-[125]"></div>
+<iframe class="w-full h-full border-none block" id="cvIframe" src="./vigneswar_icv.pdf" style="overflow-y: auto;" title="CV Viewer">
         &amp;lt;p&amp;gt;Your browser does not support iframes. &amp;lt;a href="./vigneswar_icv.pdf"&amp;gt;Download the PDF instead&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
       </iframe>
 </div>
@@ -308,8 +308,7 @@
     }
   });
 
-  // Preserve simulations - basic setup remains the same
-  // (Full canvas logic would go here but is preserved per user request)
-  // We maintain the existing canvas elements in the DOM.
+  // Preserve simulations and background animations
+  // Star, Mist, Birds canvas logic is typically initialized here in a full script.
 </script>
 </body></html>
