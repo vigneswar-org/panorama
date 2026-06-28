@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en"><head>
+<html lang="en" style=""><head></head><body class="w-full h-screen relative font-sans text-white antialiased"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Kanchenjunga - Ascend the Peak</title>
@@ -79,20 +79,71 @@
       pointer-events: auto;
     }
 
-    /* Contact Reveal Styles */
-    #contactContent.active {
+    /* Thought Bubble Styles */
+    .thought-bubble-container {
+      pointer-events: none;
+      z-index: 100;
+    }
+    
+    .bubble-trail {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid #333;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .bubble-trail.active {
       opacity: 1;
-      transform: scale(1) translateY(0);
+      transform: scale(1);
+    }
+
+    .thought-main-cloud {
+      position: absolute;
+      background: #ffffff;
+      border: 4px solid #333;
+      border-radius: 40px;
+      box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: scale(0.5) translate(-50%, -50%);
+      transform-origin: bottom left;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .thought-main-cloud.active {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
       pointer-events: auto;
     }
+
+    /* Cloud aesthetic using pseudo-elements for curves */
+    .thought-main-cloud::before, .thought-main-cloud::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      border: 4px solid #333;
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .thought-main-cloud::before {
+      width: 100px; height: 100px;
+      top: -40px; left: 30px;
+    }
+    .thought-main-cloud::after {
+      width: 120px; height: 120px;
+      top: -20px; right: 40px;
+    }
+
   </style>
-</head>
-<body class="w-full h-screen relative font-sans text-white antialiased">
 <!-- SVG Mask for Wavy Viewer -->
 <svg height="0" width="0">
 <defs>
 <clippath clippathunits="objectBoundingBox" id="cv-mask"><path d="M0,0.1 L0.02,0.08 L0.04,0.12 L0.06,0.05 L0.08,0.11 L0.1,0.03 L0.12,0.1 L0.14,0.06 L0.16,0.14 L0.18,0.04 L0.2,0.12 L0.22,0.08 L0.24,0.15 L0.26,0.07 L0.28,0.13 L0.3,0.05 L0.32,0.12 L0.34,0.08 L0.36,0.16 L0.38,0.06 L0.4,0.14 L0.42,0.1 L0.44,0.17 L0.46,0.09 L0.48,0.15 L0.5,0.07 L0.52,0.14 L0.54,0.1 L0.56,0.18 L0.58,0.08 L0.6,0.16 L0.62,0.12 L0.64,0.19 L0.66,0.11 L0.68,0.17 L0.7,0.09 L0.72,0.16 L0.74,0.12 L0.76,0.2 L0.78,0.1 L0.8,0.18 L0.82,0.14 L0.84,0.21 L0.86,0.13 L0.88,0.19 L0.9,0.11 L0.92,0.18 L0.94,0.14 L0.96,0.22 L0.98,0.12 L1,0.2 V0.8 L0.98,0.88 L0.96,0.78 L0.94,0.86 L0.92,0.82 L0.9,0.89 L0.88,0.81 L0.86,0.87 L0.84,0.79 L0.82,0.86 L0.8,0.82 L0.78,0.9 L0.76,0.8 L0.74,0.88 L0.72,0.84 L0.7,0.91 L0.68,0.83 L0.66,0.89 L0.64,0.81 L0.62,0.88 L0.6,0.84 L0.58,0.92 L0.56,0.82 L0.54,0.9 L0.52,0.86 L0.5,0.93 L0.48,0.85 L0.46,0.91 L0.44,0.83 L0.42,0.9 L0.4,0.86 L0.38,0.94 L0.36,0.84 L0.34,0.92 L0.32,0.88 L0.3,0.95 L0.28,0.87 L0.26,0.93 L0.24,0.85 L0.22,0.92 L0.2,0.88 L0.18,0.96 L0.16,0.86 L0.14,0.94 L0.12,0.9 L0.1,0.97 L0.08,0.89 L0.06,0.95 L0.04,0.87 L0.02,0.94 L0,0.9 Z"></path></clippath>
-<clippath clippathunits="objectBoundingBox" id="contact-cloud-mask"><path d="M0.5,0 C0.2,0 0,0.2 0,0.45 C0,0.5 0.05,0.55 0.1,0.6 C0.05,0.7 0.1,0.85 0.3,0.95 C0.4,1 0.6,1 0.7,0.95 C0.9,0.85 0.95,0.7 0.9,0.6 C0.95,0.55 1,0.5 1,0.45 C1,0.2 0.8,0 0.5,0 Z"></path></clippath></defs>
+</defs>
 </svg>
 <!-- BEGIN: Environment Background -->
 <div class="absolute inset-0 z-0 pointer-events-none" data-purpose="scene-container">
@@ -166,26 +217,26 @@
 </div>
 <!-- END: Environment Background -->
 <!-- CV VIEWER LAYER -->
-<div class="absolute inset-0 z-[60] flex items-center justify-center pointer-events-none px-8 pt-4 pb-12" id="cvContainer">
+<div class="absolute inset-0 z-[60] flex items-center justify-center px-8 pt-4 pb-12 pointer-events-none" id="cvContainer">
 <div class="cv-overlay w-full max-w-5xl h-[85vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden" id="cvContent">
 <button class="absolute top-4 right-8 z-[65] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV()">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
 <div class="flex-grow w-full h-full pointer-events-auto bg-black/20 pt-[38px]">
 <iframe class="w-full h-full border-none" src="./vigneswar_icv.pdf" title="CV Viewer">
-&amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;gt;
+&amp;lt;p&amp;gt;Your browser does not support iframes. &amp;lt;a href="./vigneswar_icv.pdf"&amp;gt;Download the PDF instead&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
 </iframe>
 </div>
 </div>
 </div>
-<!-- CONTACT (LINKTREE) CLOUD LAYER -->
-<div class="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none" id="contactContainer">
-<div class="w-full max-w-2xl h-[70vh] bg-white/10 backdrop-blur-md border border-white/20 relative flex flex-col shadow-[0_0_50px_rgba(255,255,255,0.3)] overflow-hidden opacity-0 pointer-events-none transition-all duration-500 scale-95 translate-y-8" id="contactContent" style="clip-path: url(#contact-cloud-mask);">
-<button class="absolute top-10 right-10 z-[80] p-2 bg-black/40 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/10 shadow-lg" onclick="toggleContact(event)">
-<span class="material-symbols-outlined text-sm">close</span>
-</button>
-<div class="flex-grow w-full h-full pointer-events-auto pt-16 pb-12 px-10">
-<iframe class="w-full h-full border-none rounded-2xl bg-black/10" src="./contact.html" title="Contact Links"></iframe>
+<!-- THOUGHT BUBBLE CONTACT LAYER -->
+<div class="absolute inset-0 z-[70] thought-bubble-container" id="contactContainer">
+<div class="bubble-trail" id="bubble1" style="width: 15px; height: 15px;"></div>
+<div class="bubble-trail" id="bubble2" style="width: 25px; height: 25px;"></div>
+<div class="bubble-trail" id="bubble3" style="width: 35px; height: 35px;"></div>
+<div class="thought-main-cloud w-[350px] h-[500px] top-1/2 left-1/2" id="thoughtCloud">
+<div class="w-full h-full relative p-2 bg-white">
+<iframe class="w-full h-full border-none rounded-[30px]" src="./contact.html" title="Contact Links"></iframe>
 </div>
 </div>
 </div>
@@ -195,7 +246,7 @@
 <div class="text-xl font-bold tracking-widest uppercase font-serif">Peak</div>
 <nav class="flex space-x-4">
 <button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="cvToggleBtn" onclick="toggleCV()">CV</button>
-<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm">Blog</button>
+<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="contactToggleBtn" onclick="toggleContact(event)">Contact</button>
 </nav>
 </header>
 <main class="flex-grow relative pointer-events-none w-full h-full">
@@ -235,8 +286,7 @@
     const isActive = content.classList.contains('active');
     
     // Close contact if it's open
-    const contactContent = document.getElementById('contactContent');
-    if (contactContent.classList.contains('active')) {
+    if (document.getElementById('thoughtCloud').classList.contains('active')) {
       toggleContact();
     }
 
@@ -252,11 +302,17 @@
   }
 
   function toggleContact(event) {
-    if (event) event.stopPropagation(); // Prevent background click logic from firing
+    if (event) event.stopPropagation();
     
-    const content = document.getElementById('contactContent');
-    const container = document.getElementById('contactContainer');
-    const isActive = content.classList.contains('active');
+    const cloud = document.getElementById('thoughtCloud');
+    const trekker = document.getElementById('trekkerNode');
+    const bubbles = [
+      document.getElementById('bubble1'),
+      document.getElementById('bubble2'),
+      document.getElementById('bubble3')
+    ];
+    
+    const isActive = cloud.classList.contains('active');
 
     // Close CV if it's open
     const cvContent = document.getElementById('cvContent');
@@ -265,30 +321,45 @@
     }
 
     if (isActive) {
-      content.classList.remove('active');
-      container.classList.remove('pointer-events-auto');
-      container.classList.add('pointer-events-none');
+      cloud.classList.remove('active');
+      bubbles.forEach(b => b.classList.remove('active'));
     } else {
-      content.classList.add('active');
-      container.classList.remove('pointer-events-none');
-      container.classList.add('pointer-events-auto');
+      const rect = trekker.getBoundingClientRect();
+      const trekX = rect.left + rect.width / 2;
+      const trekY = rect.top;
+
+      // Position bubbles randomly in sequence
+      bubbles.forEach((b, i) => {
+        const offX = (Math.random() - 0.5) * 40 + (i * 20);
+        const offY = -40 - (i * 40);
+        b.style.left = (trekX + offX) + 'px';
+        b.style.top = (trekY + offY) + 'px';
+        
+        setTimeout(() => {
+          b.classList.add('active');
+        }, i * 150);
+      });
+
+      // Show main cloud after bubbles
+      setTimeout(() => {
+        cloud.classList.add('active');
+      }, 450);
     }
   }
 
-  // Click-Away logic for both overlays
+  // Click-Away logic
   document.addEventListener('mousedown', function(e) {
     const cvContent = document.getElementById('cvContent');
-    const contactContent = document.getElementById('contactContent');
+    const thoughtCloud = document.getElementById('thoughtCloud');
     const trekkerNode = document.getElementById('trekkerNode');
     const cvToggleBtn = document.getElementById('cvToggleBtn');
+    const contactToggleBtn = document.getElementById('contactToggleBtn');
 
-    // If CV is active and we clicked outside
     if (cvContent.classList.contains('active') && !cvContent.contains(e.target) && e.target !== cvToggleBtn) {
       toggleCV();
     }
     
-    // If Contact is active and we clicked outside (avoiding the trekker itself)
-    if (contactContent.classList.contains('active') && !contactContent.contains(e.target) && !trekkerNode.contains(e.target)) {
+    if (thoughtCloud.classList.contains('active') && !thoughtCloud.contains(e.target) && !trekkerNode.contains(e.target) && e.target !== contactToggleBtn) {
       toggleContact();
     }
   });
