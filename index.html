@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" style=""><head></head><body class="w-full h-screen relative font-sans text-white antialiased"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Kanchenjunga - Ascend the Peak</title>
@@ -79,66 +79,15 @@
       pointer-events: auto;
     }
 
-    /* Thought Bubble Styles */
-    .thought-bubble-container {
-      pointer-events: none;
-      z-index: 100;
-    }
-    
-    .bubble-trail {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      border: 2px solid #333;
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    .bubble-trail.active {
+    /* Contact Reveal Styles */
+    #contactContent.active {
       opacity: 1;
-      transform: scale(1);
-    }
-
-    .thought-main-cloud {
-      position: absolute;
-      background: #ffffff;
-      border: 4px solid #333;
-      border-radius: 40px;
-      box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
-      opacity: 0;
-      transform: scale(0.5) translate(-50%, -50%);
-      transform-origin: bottom left;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      overflow: hidden;
-    }
-
-    .thought-main-cloud.active {
-      opacity: 1;
-      transform: scale(1) translate(-50%, -50%);
+      transform: scale(1) translateY(0);
       pointer-events: auto;
     }
-
-    /* Cloud aesthetic using pseudo-elements for curves */
-    .thought-main-cloud::before, .thought-main-cloud::after {
-      content: '';
-      position: absolute;
-      background: #ffffff;
-      border: 4px solid #333;
-      border-radius: 50%;
-      z-index: -1;
-    }
-
-    .thought-main-cloud::before {
-      width: 100px; height: 100px;
-      top: -40px; left: 30px;
-    }
-    .thought-main-cloud::after {
-      width: 120px; height: 120px;
-      top: -20px; right: 40px;
-    }
-
   </style>
+</head>
+<body class="w-full h-screen relative font-sans text-white antialiased">
 <!-- SVG Mask for Wavy Viewer -->
 <svg height="0" width="0">
 <defs>
@@ -224,19 +173,19 @@
 </button>
 <div class="flex-grow w-full h-full pointer-events-auto bg-black/20 pt-[38px]">
 <iframe class="w-full h-full border-none" src="./vigneswar_icv.pdf" title="CV Viewer">
-&amp;lt;p&amp;gt;Your browser does not support iframes. &amp;lt;a href="./vigneswar_icv.pdf"&amp;gt;Download the PDF instead&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;gt;
 </iframe>
 </div>
 </div>
 </div>
-<!-- THOUGHT BUBBLE CONTACT LAYER -->
-<div class="absolute inset-0 z-[70] thought-bubble-container" id="contactContainer">
-<div class="bubble-trail" id="bubble1" style="width: 15px; height: 15px;"></div>
-<div class="bubble-trail" id="bubble2" style="width: 25px; height: 25px;"></div>
-<div class="bubble-trail" id="bubble3" style="width: 35px; height: 35px;"></div>
-<div class="thought-main-cloud w-[350px] h-[500px] top-1/2 left-1/2" id="thoughtCloud">
-<div class="w-full h-full relative p-2 bg-white">
-<iframe class="w-full h-full border-none rounded-[30px]" src="./contact.html" title="Contact Links"></iframe>
+<!-- CONTACT (LINKTREE) CLOUD LAYER -->
+<div class="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none" id="contactContainer">
+<div class="w-full bg-white/10 backdrop-blur-md border border-white/20 relative flex flex-col overflow-hidden opacity-0 pointer-events-none transition-all duration-500 scale-95 translate-y-8 rounded-2xl max-w-md h-[50vh]" id="contactContent">
+<button class="absolute top-10 right-10 z-[80] p-2 bg-black/40 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/10 shadow-lg" onclick="toggleContact(event)">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<div class="flex-grow w-full h-full pointer-events-auto pt-16 pb-12 px-10">
+<iframe class="w-full h-full border-none rounded-2xl bg-black/10" src="./contact.html" title="Contact Links"></iframe>
 </div>
 </div>
 </div>
@@ -246,14 +195,14 @@
 <div class="text-xl font-bold tracking-widest uppercase font-serif">Peak</div>
 <nav class="flex space-x-4">
 <button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="cvToggleBtn" onclick="toggleCV()">CV</button>
-<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="blogbutton" onclick="">blog</button>
+<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm">Blog</button>
 </nav>
 </header>
 <main class="flex-grow relative pointer-events-none w-full h-full">
 <div class="absolute bottom-0 left-0 w-full h-full pointer-events-none" id="landmarkRegion">
 <div class="group absolute left-[15%] -translate-x-1/2 flex flex-col items-center justify-end pointer-events-auto cursor-pointer w-[120px] h-auto" id="cabinNode" style="bottom: 35.4101px;">
 <div class="absolute inset-0 bg-white/5 blur-xl rounded-full pointer-events-none"></div>
-<img alt="Cabin" class="w-full h-full object-contain filter drop-shadow-lg opacity-90 group-hover:opacity-100 transition-opacity relative z-10" src="https://lh3.googleusercontent.com/aida/AP1WRLsWo2TQulr7nzsEH63PWZRdQY2tK5-sU1f8Gi9z52574aDfr7iUe_LDsk3nVKE4ib4FRnpswYQ0dY2zW8-Wy044YmT-eammbdORCz8qYhXa-dGpm2MmObdjMGaRXfT7b7Zw_31e7YtfomOytSmhTW_IEg9TQMxRZPDvhInLMlubgcAsy9VskdR9iyiMSPkOop76kBNR3odGzDqkrKyr57n6sCA1vaAIKtSZgPa1VRkFMZUmYFnZUxazufc"/>
+<img alt="Cabin" class="w-full h-full object-contain filter drop-shadow-lg opacity-90 group-hover:opacity-100 transition-opacity relative z-10" src="https://lh3.googleusercontent.com/aida/AP1WRLuuTqwdwSambLZ-4RpgOox5VKIwMFH4K_oWLizsVTNwFO_iV4GOZFIRK7odGz5O_jEpSsi2cCvVsuVLkDFwYeO5QQ_mbU8jBfltCziUqrdnI_VCrkQ3IjifiyDZAN9WK33u2okppm4fFWO3yf7h4fnIKaIQh-_pz9slGmjgRDZlqBVmGDQO98RIhtY-pIyd47A-ck9FmWocdZ0bKP8Pfl2EA-hVv67RQteEGRR45b8Re99gxH6ue5q_Cy4"/>
 <button class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1 text-[10px] font-medium uppercase tracking-wider bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)] whitespace-nowrap z-30">Home</button>
 </div>
 <!-- Robust Trekker Listener -->
@@ -286,7 +235,8 @@
     const isActive = content.classList.contains('active');
     
     // Close contact if it's open
-    if (document.getElementById('thoughtCloud').classList.contains('active')) {
+    const contactContent = document.getElementById('contactContent');
+    if (contactContent.classList.contains('active')) {
       toggleContact();
     }
 
@@ -302,17 +252,11 @@
   }
 
   function toggleContact(event) {
-    if (event) event.stopPropagation();
+    if (event) event.stopPropagation(); // Prevent background click logic from firing
     
-    const cloud = document.getElementById('thoughtCloud');
-    const trekker = document.getElementById('trekkerNode');
-    const bubbles = [
-      document.getElementById('bubble1'),
-      document.getElementById('bubble2'),
-      document.getElementById('bubble3')
-    ];
-    
-    const isActive = cloud.classList.contains('active');
+    const content = document.getElementById('contactContent');
+    const container = document.getElementById('contactContainer');
+    const isActive = content.classList.contains('active');
 
     // Close CV if it's open
     const cvContent = document.getElementById('cvContent');
@@ -321,45 +265,30 @@
     }
 
     if (isActive) {
-      cloud.classList.remove('active');
-      bubbles.forEach(b => b.classList.remove('active'));
+      content.classList.remove('active');
+      container.classList.remove('pointer-events-auto');
+      container.classList.add('pointer-events-none');
     } else {
-      const rect = trekker.getBoundingClientRect();
-      const trekX = rect.left + rect.width / 2;
-      const trekY = rect.top;
-
-      // Position bubbles randomly in sequence
-      bubbles.forEach((b, i) => {
-        const offX = (Math.random() - 0.5) * 40 + (i * 20);
-        const offY = -40 - (i * 40);
-        b.style.left = (trekX + offX) + 'px';
-        b.style.top = (trekY + offY) + 'px';
-        
-        setTimeout(() => {
-          b.classList.add('active');
-        }, i * 150);
-      });
-
-      // Show main cloud after bubbles
-      setTimeout(() => {
-        cloud.classList.add('active');
-      }, 450);
+      content.classList.add('active');
+      container.classList.remove('pointer-events-none');
+      container.classList.add('pointer-events-auto');
     }
   }
 
-  // Click-Away logic
+  // Click-Away logic for both overlays
   document.addEventListener('mousedown', function(e) {
     const cvContent = document.getElementById('cvContent');
-    const thoughtCloud = document.getElementById('thoughtCloud');
+    const contactContent = document.getElementById('contactContent');
     const trekkerNode = document.getElementById('trekkerNode');
     const cvToggleBtn = document.getElementById('cvToggleBtn');
-    const contactToggleBtn = document.getElementById('contactToggleBtn');
 
+    // If CV is active and we clicked outside
     if (cvContent.classList.contains('active') && !cvContent.contains(e.target) && e.target !== cvToggleBtn) {
       toggleCV();
     }
     
-    if (thoughtCloud.classList.contains('active') && !thoughtCloud.contains(e.target) && !trekkerNode.contains(e.target) && e.target !== contactToggleBtn) {
+    // If Contact is active and we clicked outside (avoiding the trekker itself)
+    if (contactContent.classList.contains('active') && !contactContent.contains(e.target) && !trekkerNode.contains(e.target)) {
       toggleContact();
     }
   });
