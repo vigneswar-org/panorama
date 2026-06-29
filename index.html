@@ -168,12 +168,12 @@
 <!-- CV VIEWER LAYER -->
 <div class="absolute inset-0 z-[60] flex items-center justify-center px-8 pt-4 pb-12 pointer-events-none" id="cvContainer">
 <div class="cv-overlay w-full max-w-5xl h-[85vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden" id="cvContent">
-<button class="absolute top-4 right-8 z-[65] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV()">
+<button class="absolute top-4 right-8 z-[65] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV(event)">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
 <div class="flex-grow w-full h-full pointer-events-auto bg-black/20 pt-[38px]">
 <iframe class="w-full h-full border-none" src="./vigneswar_icv.pdf" title="CV Viewer">
-&amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;gt;
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 </iframe>
 </div>
 </div>
@@ -181,10 +181,10 @@
 <!-- CONTACT (LINKTREE) CLOUD LAYER -->
 <div class="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none" id="contactContainer">
 <div class="w-full bg-white/10 backdrop-blur-md border border-white/20 relative flex flex-col overflow-hidden opacity-0 pointer-events-none transition-all duration-500 scale-95 translate-y-8 rounded-2xl max-w-md h-[50vh]" id="contactContent">
-<button class="absolute top-10 right-10 z-[80] p-2 bg-black/40 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/10 shadow-lg" onclick="toggleContact(event)">
+<button class="absolute top-4 right-4 z-[80] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/10 shadow-lg" onclick="toggleContact(event)">
 <span class="material-symbols-outlined text-sm">close</span>
 </button>
-<div class="flex-grow w-full h-full pointer-events-auto pt-16 pb-12 px-10">
+<div class="flex-grow w-full h-full pointer-events-auto">
 <iframe class="w-full h-full border-none rounded-2xl bg-black/10" src="./contact.html" title="Contact Links"></iframe>
 </div>
 </div>
@@ -194,7 +194,7 @@
 <header class="w-full px-8 py-6 flex justify-between items-center pointer-events-auto">
 <div class="text-xl font-bold tracking-widest uppercase font-serif">Peak</div>
 <nav class="flex space-x-4">
-<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="cvToggleBtn" onclick="toggleCV()">CV</button>
+<button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm" id="cvToggleBtn" onclick="toggleCV(event)">CV</button>
 <button class="px-6 py-2 text-sm font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-sm">Blog</button>
 </nav>
 </header>
@@ -229,15 +229,19 @@
 </div>
 <!-- END: UI Overlay -->
 <script>
-  function toggleCV() {
+  function toggleCV(event) {
+    if (event) event.stopPropagation();
     const content = document.getElementById('cvContent');
     const container = document.getElementById('cvContainer');
     const isActive = content.classList.contains('active');
     
     // Close contact if it's open
     const contactContent = document.getElementById('contactContent');
+    const contactContainer = document.getElementById('contactContainer');
     if (contactContent.classList.contains('active')) {
-      toggleContact();
+      contactContent.classList.remove('active');
+      contactContainer.classList.remove('pointer-events-auto');
+      contactContainer.classList.add('pointer-events-none');
     }
 
     if (isActive) {
@@ -252,7 +256,7 @@
   }
 
   function toggleContact(event) {
-    if (event) event.stopPropagation(); // Prevent background click logic from firing
+    if (event) event.stopPropagation(); 
     
     const content = document.getElementById('contactContent');
     const container = document.getElementById('contactContainer');
@@ -260,8 +264,11 @@
 
     // Close CV if it's open
     const cvContent = document.getElementById('cvContent');
+    const cvContainer = document.getElementById('cvContainer');
     if (cvContent.classList.contains('active')) {
-      toggleCV();
+      cvContent.classList.remove('active');
+      cvContainer.classList.remove('pointer-events-auto');
+      cvContainer.classList.add('pointer-events-none');
     }
 
     if (isActive) {
@@ -275,23 +282,33 @@
     }
   }
 
-  // Click-Away logic for both overlays
-  document.addEventListener('mousedown', function(e) {
+  // Refined Click-Away logic for both overlays
+  document.addEventListener('click', function(e) {
     const cvContent = document.getElementById('cvContent');
+    const cvContainer = document.getElementById('cvContainer');
     const contactContent = document.getElementById('contactContent');
+    const contactContainer = document.getElementById('contactContainer');
     const trekkerNode = document.getElementById('trekkerNode');
     const cvToggleBtn = document.getElementById('cvToggleBtn');
 
-    // If CV is active and we clicked outside
-    if (cvContent.classList.contains('active') && !cvContent.contains(e.target) && e.target !== cvToggleBtn) {
-      toggleCV();
+    // CV Click-away: if active and click is outside the content area and not the button
+    if (cvContent.classList.contains('active')) {
+        if (!cvContent.contains(e.target) && !cvToggleBtn.contains(e.target)) {
+            cvContent.classList.remove('active');
+            cvContainer.classList.remove('pointer-events-auto');
+            cvContainer.classList.add('pointer-events-none');
+        }
     }
     
-    // If Contact is active and we clicked outside (avoiding the trekker itself)
-    if (contactContent.classList.contains('active') && !contactContent.contains(e.target) && !trekkerNode.contains(e.target)) {
-      toggleContact();
+    // Contact Click-away: if active and click is outside content and not the trigger trekker
+    if (contactContent.classList.contains('active')) {
+        if (!contactContent.contains(e.target) && !trekkerNode.contains(e.target)) {
+            contactContent.classList.remove('active');
+            contactContainer.classList.remove('pointer-events-auto');
+            contactContainer.classList.add('pointer-events-none');
+        }
     }
-  });
+  }, true); // Use capture phase to ensure it handles clicks accurately
 </script>
 <!-- BEGIN: Simulation Scripts -->
 <script data-purpose="mist-simulation">
