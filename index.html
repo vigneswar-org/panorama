@@ -87,7 +87,7 @@
     }
   </style>
 </head>
-<body class="w-full h-screen relative font-sans text-white antialiased">
+<body class="w-full h-screen relative font-sans text-white antialiased h-[100dvh] overflow-hidden">
 <!-- SVG Mask for Wavy Viewer -->
 <svg height="0" width="0">
 <defs>
@@ -124,7 +124,7 @@
 <canvas class="absolute inset-0 w-full h-full" data-purpose="particle-mist" height="1024" id="mistCanvas" width="1280"></canvas>
 </div>
 <!-- Foreground Alpine Forest -->
-<svg class="absolute bottom-0 w-full h-[30%] z-10" data-purpose="forest-silhouette" preserveaspectratio="xMidYMax slice" viewbox="0 0 1000 250">
+<svg class="absolute bottom-0 w-full h-[30%] z-10 h-[25vh] md:h-[30%]" data-purpose="forest-silhouette" preserveaspectratio="xMidYMax slice" viewbox="0 0 1000 250">
 <defs>
 <path d="M0,0 L-3,12 L-1,12 L-5,28 L-2,28 L-7,45 L-3,45 L-9,65 L-4,65 L-12,90 L12,90 L4,65 L9,65 L3,45 L7,45 L2,28 L5,28 L1,12 L3,12 Z" id="pine-tall"></path>
 <path d="M0,0 L-5,15 L-2,15 L-8,35 L-3,35 L-11,55 L-5,55 L-14,80 L14,80 L5,55 L11,55 L3,35 L8,35 L2,15 L5,15 Z" id="pine-bushy"></path>
@@ -167,20 +167,20 @@
 <!-- END: Environment Background -->
 <!-- CV VIEWER LAYER -->
 <div class="absolute inset-0 z-[60] flex items-center justify-center px-8 pt-4 pb-12 pointer-events-none" id="cvContainer">
-<div class="cv-overlay w-full max-w-5xl h-[85vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden" id="cvContent">
+<div class="cv-overlay w-full max-w-5xl h-[85vh] bg-black/40 backdrop-blur-md border border-white/10 relative flex flex-col shadow-2xl overflow-hidden h-[85dvh]" id="cvContent">
 <button class="absolute top-4 right-8 z-[65] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/20 shadow-lg" onclick="toggleCV(event)">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
 <div class="flex-grow w-full h-full pointer-events-auto bg-black/20 pt-[38px]">
 <iframe class="w-full h-full border-none" src="./vigneswar_icv.pdf" title="CV Viewer">
-&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Your browser does not support iframes. &amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;a href="./vigneswar_icv.pdf"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Download the PDF instead&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 </iframe>
 </div>
 </div>
 </div>
 <!-- CONTACT (LINKTREE) CLOUD LAYER -->
 <div class="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none" id="contactContainer">
-<div class="w-full bg-white/10 backdrop-blur-md border border-white/20 relative flex flex-col overflow-hidden opacity-0 pointer-events-none transition-all duration-500 scale-95 translate-y-8 rounded-2xl max-w-md h-[50vh]" id="contactContent">
+<div class="w-full bg-white/10 backdrop-blur-md border border-white/20 relative flex flex-col overflow-hidden opacity-0 pointer-events-none transition-all duration-500 scale-95 translate-y-8 rounded-2xl max-w-md h-[50vh] h-[50dvh]" id="contactContent">
 <button class="absolute top-4 right-4 z-[80] p-2 bg-black/60 hover:bg-white/20 rounded-full text-white transition-colors pointer-events-auto border border-white/10 shadow-lg" onclick="toggleContact(event)">
 <span class="material-symbols-outlined text-sm">close</span>
 </button>
@@ -190,7 +190,7 @@
 </div>
 </div>
 <!-- BEGIN: UI Overlay -->
-<div class="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none" data-purpose="ui-layer" id="uiOverlay">
+<div class="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none h-[100dvh]" data-purpose="ui-layer" id="uiOverlay">
 <header class="w-full px-8 py-6 flex justify-between items-center pointer-events-auto">
 <div class="text-xl font-bold tracking-widest uppercase font-serif">Peak</div>
 <nav class="flex space-x-4">
